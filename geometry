@@ -1,0 +1,69 @@
+/// complex numbers
+For a given complex number a + bi, we can compute its polar form as
+r = |a + b * i| = sqrt(a * a + b * b)
+ϕ = arg(a + bi) = atan2(b, a)
+
+and conversely, a complex number with polar coordinates r, ϕ can be written
+r cos ϕ + (r sin ϕ)i = r(cos ϕ + isin ϕ) =: r cis ϕ
+
+Multiplication
+cis ϕ = cos ϕ + isin ϕ
+(r1 cis ϕ1) ∗ (r2 cis ϕ2) = (r1r2) cis(ϕ1 + ϕ2).
+(a + bi) ∗ (c + di) =  (ac − bd) + (ad + bc)i
+typedef double T;
+
+/// Transformation
+// translation
+add the vector to the every point of the object we want to translate
+// Scaling
+f(p) = c + α(p − c)
+/// products and angles
+// dot and cross product
+
+
+
+
+
+
+
+
+
+
+/// structures 
+// point
+typedef double T;
+struct pt {
+    T x,y;
+    pt operator+(pt p) {return {x+p.x, y+p.y};}
+    pt operator-(pt p) {return {x-p.x, y-p.y};}
+    pt operator*(T d) {return {x*d, y*d};}
+    pt operator/(T d) {return {x/d, y/d};} // only for floatingpoint
+    T sq(pt p) {return p.x*p.x + p.y*p.y;}
+    double abs(pt p) {return sqrt(sq(p));}
+    pt translate(pt v, pt p) {return p+v;}
+    pt scale(pt c, double factor, pt p) {
+        return c + (p-c)*factor;
+    }
+    pt rot(pt p, double a) {
+        return {p.x*cos(a) - p.y*sin(a), p.x*sin(a) + p.y*cos(a)};
+    }
+    /*pt linearTransfo(pt p, pt q, pt r, pt fp, pt fq) { // haven't understand it yet
+      return fp + (r-p) * (fq-fp) / (q-p);
+    }*/
+    T dot(pt v, pt w) {return v.x*w.x + v.y*w.y;}
+    double angle(pt v, pt w) {
+      double cosTheta = dot(v,w) / abs(v) / abs(w);
+      return acos(max(-1.0, min(1.0, cosTheta)));
+    }
+
+};
+template <typename T> int sgn(T x) {
+    return (T(0) < x) - (x < T(0));
+}
+// point complex
+typedef double T;
+typedef complex<T> pt;
+#define x real()
+#define y imag()
+
+
