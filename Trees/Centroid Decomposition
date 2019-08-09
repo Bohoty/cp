@@ -1,0 +1,34 @@
+const int N = 1e5 + 5;
+int sz[N], par2[N];
+bool done[N];
+// g orginal tree, g2 centorid
+vector<vector<int> > g(N), g2(N);
+int updatesz(int node, int par) {
+  sz[node] = 1;
+  for (auto ch : g[node])
+    if (ch != par && !done[ch])
+      sz[node] += updatesz(ch, node);
+  return sz[node];
+}
+int getcentroid(int node, int par, int total) {
+  int maxx = 0, temp = 0;
+  for (auto ch : g[node]){
+    if (done[ch] || ch == par) continue;
+    if (sz[ch] > maxx) maxx = sz[ch], temp = ch;
+  }
+  if (maxx <= total / 2) return node;
+  return getcentroid(temp, node, total);
+}
+int decompose(int node, int par = -1) {
+  int cen = getcentroid(node, par, updatesz(node, par));
+  done[cen] = 1;
+  if (par != -1) {
+    g2[par].push_back(cen);
+    par2[cen] = par;
+  }
+  for (auto ch : g[cen])
+    if (done[g[cen][i]]) continue;
+    decompose(g[cen][i], cen);
+  }
+  return cen;
+}
