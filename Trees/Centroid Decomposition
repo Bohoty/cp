@@ -26,9 +26,9 @@ int decompose(int node, int par = -1) {
     g2[par].push_back(cen);
     par2[cen] = par;
   }
-  for (auto ch : g[cen])
-    if (done[g[cen][i]]) continue;
-    decompose(g[cen][i], cen);
+  for (auto ch : g[cen]){
+  if (done[ch]) continue;
+    decompose(ch, cen);
   }
   return cen;
 }
