@@ -1,49 +1,47 @@
-const int K = 26;
-struct node {
-    int nxt[K], go[K], p = -1, link = -1;
-    char pch;
-    bool leaf = 0;
-    node() {
-        fill(begin(nxt), end(nxt), -1);
+const int N = 1e5 + 5;
+const int M = 26;
+int trie[N][M], suffix_link[N], exit_link[N], go[N][M];
+bool leaf[N], vis[N];
+int ptr = 1;
+void dfs (int node) {
+    if (vis[node] || node == 0) return;
+    vis[node] = 1;
+    dfs(suffix_link[node]);
+    if (leaf[suffix_link[node]]) exit_link[node] = suffix_link[node];
+    else exit_link[node] = exit_link[suffix_link[node]];
+}
+void Aho(){
+    queue<int> q;
+    for(int i = 0; i < M; i++) if(trie[0][i]) q.push(trie[0][i]), suffix_link[trie[0][i]] = 0;
+    for(int i = 0; i < M; i++) go[0][i] = trie[0][i];
+    while(!q.empty()) {
+        int x = q.front(); q.pop();
+        for(int i = 0; i < M; i++) {
+            if(trie[x][i]) {
+                int y = trie[x][i];
+                suffix_link[y] = suffix_link[x];
+                while(suffix_link[y] && !trie[suffix_link[y]][i])
+                    suffix_link[y] = suffix_link[suffix_link[y]];
+                if(trie[suffix_link[y]][i]) suffix_link[y] = trie[suffix_link[y]][i];
+                q.push(y);
+            }
+            if(trie[x][i]) go[x][i] = trie[x][i];
+            else go[x][i] = go[suffix_link[x]][i];
+        }
     }
-    node(int p=-1, char ch='$') : p(p), pch(ch) {
-        fill(begin(nxt), end(nxt), -1);
-        fill(begin(go), end(go), -1);
-    }
-};
-vector < node > t(1);
-void add_string(string &s) {
+    for(int i = 0; i < N ; i++) dfs(i);
+}
+int idx[N];
+void ins(string x, int ii){
     int cur = 0;
-    for(char c : s) {
-        int cc = c - 'a';
-        if (t[cur].nxt[cc] == -1) t[cur].nxt[cc] = t.size(), t.emplace_back(cur, c);
-        cur = t[cur].nxt[cc];
+    for(int i = 0; i < x.size(); i++){
+        if(!trie[cur][x[i]-'a'])
+        trie[cur][x[i]-'a'] = ptr++;
+        cur = trie[cur][x[i]-'a'];
     }
-    t[cur].leaf = 1;
+    idx [ii] = cur;
+    leaf[cur] = 1;
 }
-
-int go(int v, char ch);
-
-int get_link(int v) {
-    if (t[v].link == -1) {
-        if (v == 0 || t[v].p == 0)
-            t[v].link = 0;
-        else
-            t[v].link = go(get_link(t[v].p), t[v].pch);
-    }
-    return t[v].link;
-}
-
-int go(int v, char ch) {
-    int c = ch - 'a';
-    if (t[v].go[c] == -1) {
-        if (t[v].nxt[c] != -1)
-            t[v].go[c] = t[v].nxt[c];
-        else
-            t[v].go[c] = v == 0 ? 0 : go(get_link(v), ch);
-    }
-    return t[v].go[c];
-}
-
-// Find all strings from a given set in a text
 // Finding the lexicographical smallest string of a given length that doesn't match any given strings
+// Finding the shortest string containing all given strings
+//
