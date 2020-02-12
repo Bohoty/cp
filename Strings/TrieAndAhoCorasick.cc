@@ -43,5 +43,5 @@ void ins(string x, int ii){
     leaf[cur] = 1;
 }
 // Finding the lexicographical smallest string of a given length that doesn't match any given strings
-// Finding the shortest string containing all given strings
-//
+// Finding the shortest string containing all given strings (bfs(node, mask)).
+// Finding the lexicographical smallest string of length L containing k strings
