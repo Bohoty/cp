@@ -3,7 +3,9 @@ int n, l;
 int timer;
 vector<int> tin, tout;
 vector<vector<int>> up;
+int lvl[N];
 void dfs(int v, int p){
+    lvl[v] = lvl[p] + 1;
     tin[v] = ++timer;
     up[v][0] = p;
     for (int i = 1; i <= l; ++i)
@@ -35,4 +37,8 @@ void preprocess(int root) {
     l = ceil(log2(n + 1));
     up.assign(n + 1, vector<int>(l + 1));
     dfs(root, root);
+}
+int dist(int a, int b) {
+    int l = lca(a,b);
+    return abs (lvl[l] - lvl[a]) + abs(lvl[l] - lvl[b]);
 }
