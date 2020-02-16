@@ -1,29 +1,27 @@
-// by 3eno
-const int M = 2, MOD = 1e9 + 7;
-struct Matrix {
-	ll mat[M][M];
-	Matrix(bool I) {
-		memset(mat, 0, sizeof mat);
-		if (I)
-			for (int j = 0; j < M; j++)
-				mat[j][j] = 1;
-	}
-	ll * operator [](ll i) {
-		return mat[i];
-	}
-	friend Matrix operator *(Matrix A, Matrix B) {
-		Matrix ret(0);
-		for (int i = 0; i < M; i++)
-			for (int j = 0; j < M; j++)
-				for (int k = 0; k < M; k++)
-					ret[i][j] = (ret[i][j] + A[i][k] * B[k][j]) % MOD;
-		return ret;
-	}
-	Matrix expo(ll n) {
-		if (!n)
-			return Matrix(1);
-		if (n & 1LL)
-			return *this * expo(n - 1);
-		return (*this * *this).expo(n >> 1LL);
-	}
+struct matrix {
+    int n;
+    ll a[M][M];
+    matrix(int _n, ll val){
+        memset(a, 0, sizeof a);
+        n = _n;
+        for(int i = 0 ; i < n ; i++)
+            a[i][i] = val;
+    }
 };
+matrix operator*(const matrix&a, const matrix&b) {
+    matrix c(a.n, 0);
+    for(int i = 0 ; i < a.n ; i++)
+        for(int j = 0 ; j < a.n ; j++)
+            for(int k = 0 ; k < a.n ; k++)
+                c.a[i][j] = (c.a[i][j] + a.a[i][k] * b.a[k][j] % mod) % mod;
+    return c;
+}
+matrix power(matrix a, ll b){
+    matrix res(a.n, 1),temp=a;
+    while(b){
+        if(b&1)res=res*temp;
+        temp=temp*temp;
+        b>>=1;
+    }
+    return res;
+}
