@@ -9,6 +9,7 @@ void pre(int node = 1) { // just finding the heavy child of each node(the one wi
     int mx = 0;
     for (int child : g[node]) {
         if (child == parent[node]) continue;
+        parent[child] = node;
         pre(child);
         sz[node] += sz[child];
         if (sz[child] > mx)
